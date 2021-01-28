@@ -18,6 +18,22 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
+    @property
+    def comments(self):
+        return self.comment_set.all()
+
+    @property
+    def get_comment_count(self):
+        return self.comment_set.count()
+
+    @property
+    def get_view_count(self):
+        return self.postview_set.count()
+
+    @property
+    def get_like_count(self):
+        return self.like_set.count()
+    
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
