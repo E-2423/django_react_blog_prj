@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #My Apps
     'blogapp.apps.BlogappConfig',
     'blog_api.apps.BlogApiConfig',
+    'users.apps.UsersConfig',
     #3rd party
     'crispy_forms',
     'rest_framework',
