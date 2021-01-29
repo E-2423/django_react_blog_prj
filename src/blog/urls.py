@@ -23,6 +23,7 @@ urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('api/', include('blog_api.urls')),
     # path('', include("blogapp.urls")),
+    path('api/user/', include('user_api.urls')),
 ]
 
 if settings.DEBUG:
