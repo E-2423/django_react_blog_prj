@@ -5,19 +5,25 @@ from .serializers import PostCreateUpdateSerializer, PostListSerializer, PostDet
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .permissions import IsOwner
+from .pagination import PostPageNumberPagination
 from blog_api import serializers
 
 
 
 class PostList(generics.ListAPIView):
 
-    
+    permission_classes = [AllowAny]
+    pagination_class = PostPageNumberPagination
     serializer_class = PostListSerializer
     queryset = Post.objects.filter(status="p")
 
 
 class UserPostList(generics.ListAPIView):
     serializer_class = PostListSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    pagination_class = PostPageNumberPagination
    
     # queryset = Post.objects.filter(author=request.user)
 
@@ -29,6 +35,7 @@ class UserPostList(generics.ListAPIView):
 
 
 class PostCreateApi(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
 
@@ -39,6 +46,7 @@ class PostCreateApi(generics.CreateAPIView):
 
 
 class PostDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = "slug"
@@ -51,6 +59,7 @@ class PostDetail(generics.RetrieveAPIView):
 
 
 class PostUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
     lookup_field = "slug"
@@ -60,6 +69,7 @@ class PostUpdate(generics.RetrieveUpdateAPIView):
 
 
 class PostDelete(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = "slug"
@@ -71,7 +81,7 @@ class CreateCommentAPI(APIView):
         Create a comment instance. Returns created comment data
         parameters: [slug, body]
     """
-
+    permission_classes = [IsAuthenticated, IsOwner]
     serializer_class = CommentCreateSerializer
 
     def post(self, request, slug):
@@ -87,6 +97,7 @@ class CreateCommentAPI(APIView):
 
 class CreateLikeAPI(APIView):
 
+    permission_classes = [IsAuthenticated]
     # serializer_class = CommentCreateSerializer
 
     def post(self, request, slug):
